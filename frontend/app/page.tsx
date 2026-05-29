@@ -42,12 +42,22 @@ export default function Home() {
 
   async function loadStats() {
     const response = await fetch(`${apiBase}/stats`);
+    if (!response.ok) throw new Error(await response.text());
     const data = await response.json();
     setStats(data);
   }
 
+  async function refreshStats() {
+    setError("");
+    try {
+      await loadStats();
+    } catch {
+      setError("无法连接后端，请确认 FastAPI 已启动在 http://localhost:8000。");
+    }
+  }
+
   useEffect(() => {
-    loadStats().catch(() => setError("无法连接后端，请确认 FastAPI 已启动。"));
+    refreshStats();
   }, []);
 
   async function rebuild() {
@@ -86,7 +96,7 @@ export default function Home() {
       const data: ChatResponse = await response.json();
       setMessages((items) => [...items, { role: "assistant", content: data.reply }]);
       setLastExamples(data.retrieved_examples || []);
-      await loadStats();
+      loadStats().catch(() => undefined);
     } catch (err) {
       setError(err instanceof Error ? err.message : "发送失败");
       setMessages((items) => [...items, { role: "system", content: "请求失败，请检查后端和 API 配置。" }]);
@@ -110,7 +120,7 @@ export default function Home() {
             <button className="primary" onClick={rebuild} disabled={rebuilding}>
               {rebuilding ? "构建中…" : "重新构建数据"}
             </button>
-            <button className="secondary" onClick={() => loadStats()}>
+            <button className="secondary" onClick={refreshStats}>
               刷新状态
             </button>
           </div>
