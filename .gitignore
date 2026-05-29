@@ -1,0 +1,16 @@
+__pycache__/
+*.py[cod]
+.env
+.venv/
+venv/
+backend/data/processed/
+backend/data/vector_store/
+backend/data/persona_profile.json
+backend/data/examples.jsonl
+backend/data/normalized_messages.jsonl
+backend/data/stats.json
+frontend/.next/
+frontend/node_modules/
+frontend/.env.local
+聊天记录/
+.DS_Store
