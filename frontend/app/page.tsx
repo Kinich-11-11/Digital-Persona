@@ -63,6 +63,7 @@ export default function Home() {
   async function rebuild() {
     setRebuilding(true);
     setError("");
+    setMessages((items) => [...items, { role: "system", content: "正在重新构建本地数据，请稍等……" }]);
     try {
       const response = await fetch(`${apiBase}/rebuild`, { method: "POST" });
       if (!response.ok) throw new Error(await response.text());
@@ -70,7 +71,9 @@ export default function Home() {
       setStats(data.stats);
       setMessages((items) => [...items, { role: "system", content: `已完成构建：${data.stats.message_count} 条消息，${data.stats.example_count} 个样例。` }]);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "重新构建失败");
+      const message = err instanceof Error ? err.message : "重新构建失败";
+      setError(message.includes("Failed to fetch") ? `无法连接后端：${apiBase}` : message);
+      setMessages((items) => [...items, { role: "system", content: "重新构建失败，请检查后端窗口日志和浏览器错误提示。" }]);
     } finally {
       setRebuilding(false);
     }

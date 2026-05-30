@@ -16,7 +16,7 @@ class Settings(BaseSettings):
     user_person_name: str = Field(default="我", alias="USER_PERSON_NAME")
     chat_records_dir: Path = Field(default=Path("../聊天记录"), alias="CHAT_RECORDS_DIR")
     data_dir: Path = Field(default=Path("./data"), alias="DATA_DIR")
-    cors_origins: str = Field(default="http://localhost:3000,http://127.0.0.1:3000", alias="CORS_ORIGINS")
+    cors_origins: str = Field(default="http://localhost:3000,http://127.0.0.1:3000,http://localhost:3001,http://127.0.0.1:3001", alias="CORS_ORIGINS")
 
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
 
