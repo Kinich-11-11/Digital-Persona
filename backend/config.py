@@ -18,7 +18,7 @@ class Settings(BaseSettings):
     data_dir: Path = Field(default=Path("./data"), alias="DATA_DIR")
     cors_origins: str = Field(default="http://localhost:3000,http://127.0.0.1:3000,http://localhost:3001,http://127.0.0.1:3001", alias="CORS_ORIGINS")
 
-    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
+    model_config = SettingsConfigDict(env_file=Path(__file__).resolve().parent / ".env", env_file_encoding="utf-8", extra="ignore")
 
     @model_validator(mode="after")
     def resolve_paths(self) -> "Settings":
